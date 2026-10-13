@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plan, build, test, analyze, and document aerospace engineering projects with AeroLab.">
+    <title>AeroLab | Projects Workspace</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .projects-main { max-width: 1200px; margin: auto; padding: 66px 6% 80px; }
+        .projects-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 34px; }
+        .projects-heading h1 { font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.05; margin: 0 0 12px; }
+        .projects-heading p { color: #aebdce; font-size: 1.05rem; }
+        .eyebrow { color: #4da3ff; font-size: .8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+        .action-button, .filter-button, .view-button, .close-button { font: inherit; cursor: pointer; }
+        .action-button { flex: 0 0 auto; padding: 12px 19px; border: 1px solid #4da3ff; border-radius: 7px; background: #4da3ff; color: #06101d; font-weight: 700; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+        .action-button:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(77,163,255,.25); background: #69b1ff; }
+        .dashboard { padding: 24px; border: 1px solid #20344d; border-radius: 12px; background: #0b192b; }
+        .dashboard-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; }
+        .dashboard-top h2 { font-size: 1.15rem; }
+        .demo-note { color: #8497ad; font-size: .82rem; }
+        .project-controls { display: grid; grid-template-columns: minmax(220px, 1fr) auto; gap: 18px; align-items: end; margin-bottom: 24px; }
+        .search-field label, .filter-label { display: block; color: #aebdce; font-size: .86rem; font-weight: 700; margin-bottom: 7px; }
+        .search-field input, .form-field input, .form-field textarea, .form-field select { width: 100%; border: 1px solid #304761; border-radius: 6px; background: #07111f; color: #f4f7fb; font: inherit; padding: 11px 12px; }
+        .search-field input:focus, .form-field input:focus, .form-field textarea:focus, .form-field select:focus { outline: 2px solid #4da3ff; outline-offset: 2px; }
+        .filter-list { display: flex; flex-wrap: wrap; gap: 7px; }
+        .filter-button { padding: 7px 10px; border: 1px solid #304761; border-radius: 999px; background: transparent; color: #aebdce; font-size: .82rem; transition: .2s ease; }
+        .filter-button:hover, .filter-button[aria-pressed="true"] { border-color: #4da3ff; color: #fff; background: #102943; }
+        .project-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+        .project-card { display: flex; flex-direction: column; min-height: 280px; padding: 20px; border: 1px solid #20344d; border-radius: 10px; background: #091525; transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease; }
+        .project-card:hover { transform: translateY(-4px); border-color: #4da3ff; box-shadow: 0 12px 28px rgba(0,0,0,.24); }
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+        .project-card h3 { font-size: 1.1rem; line-height: 1.35; overflow-wrap: anywhere; } .workflow-fields{margin:12px 0;padding:12px;border:1px solid #20344d;border-radius:7px}.workflow-fields summary{color:#8fc6ff;cursor:pointer;font-weight:700;margin-bottom:10px}.project-login-prompt{margin-top:8px;color:#ffcf7a;font-size:.84rem}.project-login-prompt p{margin-bottom:5px}.detail-workflow-meta strong{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.82rem;font-weight:400;color:#cbd6e4}.workflow-long{grid-column:1/-1}.project-resources{display:grid;grid-template-columns:1fr 1fr;gap:14px}.project-resources section{padding:14px;border:1px solid #20344d;border-radius:8px;background:#091525}.project-resources h3{margin-bottom:10px}.project-resources label{display:block;margin:6px 0;color:#cbd6e4;font-size:.82rem}.resource-form-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:7px}.resource-form-row input,.project-resources input:not([type=checkbox]){min-width:0;width:100%;padding:8px;border:1px solid #304761;border-radius:5px;background:#07111f;color:#f4f7fb;font:inherit}.material-row{grid-template-columns:minmax(90px,1fr) 70px 90px auto}.data-row{grid-template-columns:minmax(70px,.8fr) minmax(60px,1fr) minmax(60px,1fr) auto}.resource-list{list-style:none;display:grid;gap:6px;margin-top:10px}.resource-list li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px;border-radius:5px;background:#0b192b;color:#cbd6e4;font-size:.82rem}.resource-list label{display:flex;align-items:center;gap:7px;margin:0}.resource-list input[type=checkbox]{accent-color:#4da3ff}.resource-list button{padding:4px 7px;border:1px solid #304761;border-radius:4px;background:transparent;color:#ffb3b3;cursor:pointer}.data-table-wrap{overflow-x:auto}#project-data-canvas{display:block;width:100%;height:210px;margin-top:12px;border:1px solid #20344d;border-radius:5px;background:#07111f}
+        .demo-badge { color: #8fc6ff; background: #102943; border: 1px solid #244b70; border-radius: 4px; padding: 2px 6px; font-size: .66rem; font-weight: 700; letter-spacing: .5px; white-space: nowrap; }
+        .project-description { color: #94a6ba; font-size: .9rem; margin-bottom: 16px; overflow-wrap: anywhere; }
+        .status-row, .progress-label, .deadline-row { display: flex; justify-content: space-between; gap: 10px; align-items: center; color: #aebdce; font-size: .82rem; }
+        .status-pill { color: #cbd6e4; background: #14263b; border: 1px solid #2a4059; border-radius: 999px; padding: 3px 9px; font-size: .75rem; }
+        .progress-label { margin: 14px 0 6px; }
+        .progress-track { height: 8px; overflow: hidden; border-radius: 99px; background: #1b2c40; }
+        .progress-fill { height: 100%; border-radius: inherit; background: #4da3ff; transition: width .3s ease; }
+        .deadline-row { margin-top: 13px; }
+        .view-button { margin-top: auto; align-self: flex-start; padding: 8px 12px; border: 1px solid #345271; border-radius: 6px; background: transparent; color: #dce8f5; font-weight: 700; transition: background .2s ease, border-color .2s ease, transform .2s ease; }
+        .project-card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}.project-card-actions .view-button{margin-top:0}.project-card-actions .delete-project-button{border-color:#70454b;color:#ffb3b3}.project-card-actions .delete-project-button:hover{border-color:#ff7777;background:#321a20}
+        .view-button:hover { transform: translateY(-2px); border-color: #4da3ff; background: #102943; }
+        .empty-state { padding: 36px 16px; text-align: center; color: #aebdce; border: 1px dashed #304761; border-radius: 9px; }
+        .empty-state strong { display: block; color: #f4f7fb; margin-bottom: 5px; }
+        .modal-backdrop { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 18px; background: rgba(2,8,15,.78); }
+        .modal-backdrop[hidden] { display: none; }
+        .modal { width: min(100%, 520px); max-height: min(90vh, 760px); overflow-y: auto; padding: 24px; border: 1px solid #304761; border-radius: 12px; background: #0b192b; box-shadow: 0 24px 70px rgba(0,0,0,.5); }
+        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+        .modal-header h2 { font-size: 1.4rem; }
+        .modal-header p { color: #94a6ba; font-size: .9rem; margin-top: 4px; }
+        .close-button { width: 36px; height: 36px; border: 1px solid #304761; border-radius: 6px; background: transparent; color: #cbd6e4; font-size: 1.2rem; }
+        .close-button:hover { border-color: #4da3ff; color: white; }
+        .form-field { margin-bottom: 15px; }
+        .form-field label { display: block; margin-bottom: 6px; color: #cbd6e4; font-size: .88rem; font-weight: 700; }
+        .form-field textarea { min-height: 92px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .range-line { display: flex; align-items: center; gap: 12px; }
+        .form-field input[type="range"] { padding: 0; accent-color: #4da3ff; }
+        .range-value { min-width: 42px; color: #cbd6e4; font-size: .88rem; }
+        .form-error { min-height: 1.4em; color: #ff9b9b; font-size: .86rem; }
+        .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; }
+        .secondary-button { padding: 10px 14px; border: 1px solid #304761; border-radius: 6px; background: transparent; color: #dce8f5; font: inherit; cursor: pointer; }
+        .secondary-button:hover { background: #14263b; }
+        .detail-copy { color: #aebdce; margin: 8px 0 18px; }
+        .detail-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .detail-meta div { padding: 12px; border-radius: 7px; background: #091525; color: #aebdce; font-size: .84rem; }
+        .detail-meta strong { display: block; color: #f4f7fb; margin-top: 3px; }
+        @media (max-width: 900px) { .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .project-controls { grid-template-columns: 1fr; } }
+        @media (max-width: 700px) { .project-resources{grid-template-columns:1fr}.material-row,.data-row{grid-template-columns:1fr 1fr}.resource-form-row{grid-template-columns:1fr 1fr} }
+        @media (max-width: 600px) { .projects-main { padding-top: 46px; } .projects-heading { align-items: flex-start; flex-direction: column; } .dashboard { padding: 17px; } .dashboard-top { align-items: flex-start; flex-direction: column; } .project-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; gap: 0; } }
+        @media (prefers-reduced-motion: reduce) { .action-button, .project-card, .progress-fill, .view-button, .filter-button { transition: none; } }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script><script src="../js/config.js" defer></script><script src="../js/supabase.js" defer></script><script src="../js/site-auth.js" defer></script><script src="../js/projects.js" defer></script>
+</head>
+<body>
+<header>
+    <nav aria-label="Main navigation"><a href="../index.html" class="logo-link"><div class="logo">AERO<span>LAB</span></div></a><ul><li><a href="../index.html">Home</a></li><li><a href="projects.html" aria-current="page">Projects</a></li><li><a href="toolkit.html">Toolkit</a></li><li><a href="learning.html">Learning</a></li><li><a href="college-career.html">College &amp; Career</a></li><li><a href="portfolio.html">Portfolio</a></li><li><a href="contact.html">Contact</a></li><li class="auth-nav"><a href="login.html" data-login-link>Login</a><span data-auth-account hidden><span class="status-dot-online" aria-hidden="true"></span><span class="auth-account-label">Account:</span> <span data-auth-email></span></span><button type="button" data-auth-logout hidden>Logout</button><span class="auth-nav-status" data-auth-status aria-live="polite"></span></li></ul></nav>
+</header>
+<main class="projects-main">
+    <section class="projects-heading" aria-labelledby="page-title">
+        <div>
+            <div class="eyebrow">Aerospace Engineering Workspace</div>
+            <h1 id="page-title">Projects</h1>
+            <p>Plan, build, test, analyze, and document your engineering work.</p>
+        </div>
+        <button class="action-button" id="create-project-button" type="button">Create Project</button>
+    </section>
+    <section class="dashboard" aria-labelledby="dashboard-title">
+        <div class="dashboard-top">
+            <h2 id="dashboard-title">Project Dashboard</h2>
+            <div><p id="demo-project-note" class="demo-note" hidden>Cards marked DEMO are examples, not your projects.</p><p id="project-load-status" class="demo-note" aria-live="polite"></p><div id="project-login-prompt" class="project-login-prompt" hidden></div></div>
+        </div>
+        <div class="project-controls">
+            <div class="search-field">
+                <label for="project-search">Search projects</label>
+                <input id="project-search" type="search" placeholder="Search titles and descriptions…" autocomplete="off">
+            </div>
+            <div>
+                <span class="filter-label" id="filter-label">Filter by status</span>
+                <div class="filter-list" id="status-filters" role="group" aria-labelledby="filter-label"></div>
+            </div>
+        </div>
+        <div class="project-grid" id="project-grid" aria-live="polite"></div>
+        <div class="empty-state" id="empty-state" hidden>
+            <strong>No projects match your search.</strong>
+            Try another title, description, or status filter.
+        </div>
+    </section>
+</main>
+<footer><div><p>AeroLab — Learn. Design. Build. Analyze.</p></div></footer>
+<div class="modal-backdrop" id="project-modal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="form-title">
+        <div class="modal-header">
+            <div><h2 id="form-title">Create a Project</h2><p>Save an engineering project to your AeroLab account.</p></div>
+            <button class="close-button" type="button" data-close-modal aria-label="Close project form">×</button>
+        </div>
+        <form id="project-form" novalidate>
+            <div class="form-field"><label for="project-name">Project name <span aria-hidden="true">*</span></label><input id="project-name" name="name" type="text" required maxlength="80" autocomplete="off"></div>
+            <div class="form-field"><label for="project-description">Description</label><textarea id="project-description" name="description" maxlength="300"></textarea></div>
+            <div class="form-row">
+                <div class="form-field"><label for="project-status">Status</label><select id="project-status" name="status"></select></div>
+                <div class="form-field"><label for="project-deadline">Deadline</label><input id="project-deadline" name="deadline" type="date"></div>
+            </div>
+            <div class="form-field"><label for="project-progress">Progress</label><div class="range-line"><input id="project-progress" name="progress" type="range" min="0" max="100" value="0"><span class="range-value" id="progress-value">0%</span></div></div>
+            <details id="workflow-fields" class="workflow-fields"><summary>Project workflow notes</summary><div class="form-field"><label for="project-objective">Objective</label><textarea id="project-objective" name="objective" maxlength="1500"></textarea></div><div class="form-field"><label for="project-research">Research</label><textarea id="project-research" name="research" maxlength="3000"></textarea></div><div class="form-field"><label for="project-design-notes">Design notes</label><textarea id="project-design-notes" name="design_notes" maxlength="3000"></textarea></div><div class="form-field"><label for="project-experiment">Experiment plan</label><textarea id="project-experiment" name="experiment" maxlength="3000"></textarea></div><div class="form-field"><label for="project-data-notes">Data notes</label><textarea id="project-data-notes" name="data" maxlength="3000"></textarea></div><div class="form-field"><label for="project-results">Results</label><textarea id="project-results" name="results" maxlength="3000"></textarea></div><div class="form-field"><label for="project-conclusion">Conclusion</label><textarea id="project-conclusion" name="conclusion" maxlength="3000"></textarea></div><div class="form-field"><label for="project-budget">Estimated budget <span class="unit">(currency units)</span></label><input id="project-budget" name="budget" type="number" min="0" step="0.01" value="0"></div></details>
+            <p class="form-error" id="form-error" role="alert"></p>
+            <div class="form-actions"><button class="secondary-button" type="button" data-close-modal>Cancel</button><button class="action-button" id="save-project-button" type="submit">Add Project</button></div>
+        </form>
+    </section>
+</div>
+<div class="modal-backdrop" id="details-modal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="details-title">
+        <div class="modal-header"><div><div class="eyebrow">Project Overview</div><h2 id="details-title"></h2></div><button class="close-button" type="button" data-close-modal aria-label="Close project details">×</button></div>
+        <p class="detail-copy" id="details-description"></p>
+        <div class="detail-meta"><div>Status<strong id="details-status"></strong></div><div>Progress<strong id="details-progress"></strong></div><div>Deadline<strong id="details-deadline"></strong></div><div>Record type<strong id="details-type"></strong></div></div>
+        <section class="project-workflow" id="project-workflow" hidden><h3>Workflow details</h3><div class="detail-meta detail-workflow-meta"><div>Objective<strong id="details-objective"></strong></div><div>Budget<strong id="details-budget"></strong></div><div class="workflow-long">Research<strong id="details-research"></strong></div><div class="workflow-long">Design notes<strong id="details-design"></strong></div><div class="workflow-long">Experiment<strong id="details-experiment"></strong></div><div class="workflow-long">Data notes<strong id="details-data"></strong></div><div class="workflow-long">Results<strong id="details-results"></strong></div><div class="workflow-long">Conclusion<strong id="details-conclusion"></strong></div></div><div class="project-resources"><section><h3>Project Tasks</h3><form id="project-task-form"><label for="project-task-title">Task</label><div class="resource-form-row"><input id="project-task-title" maxlength="160" required><input id="project-task-due" type="date" aria-label="Task due date"><button class="secondary-button" type="submit">Add Task</button></div><p id="task-error" class="form-error" role="alert"></p></form><ul id="project-task-list" class="resource-list"></ul></section><section><h3>Materials</h3><form id="project-material-form"><label for="material-name">Material</label><div class="resource-form-row material-row"><input id="material-name" maxlength="120" required><input id="material-quantity" type="number" min="1" step="1" value="1" aria-label="Quantity"><input id="material-cost" type="number" min="0" step="0.01" value="0" aria-label="Estimated cost"><button class="secondary-button" type="submit">Add</button></div><p id="material-error" class="form-error" role="alert"></p></form><ul id="project-material-list" class="resource-list"></ul></section><section class="experimental-section"><h3>Experimental Data</h3><form id="experimental-form"><div class="resource-form-row data-row"><input id="experiment-label" maxlength="100" placeholder="Label" aria-label="Data point label"><input id="experiment-x" type="number" step="any" required placeholder="X" aria-label="X value"><input id="experiment-y" type="number" step="any" required placeholder="Y" aria-label="Y value"><button class="secondary-button" type="submit">Add Point</button></div><label for="experiment-notes">Notes</label><input id="experiment-notes" maxlength="300" placeholder="Optional notes"><p id="experimental-error" class="form-error" role="alert"></p></form><div class="data-table-wrap"><table><thead><tr><th>Label</th><th>X</th><th>Y</th><th>Notes</th><th>Action</th></tr></thead><tbody id="experimental-rows"></tbody></table></div><canvas id="project-data-canvas" aria-label="Graph of saved project experimental data">Graph of saved experimental data points.</canvas></section></div></section>
+        <p id="project-detail-status" class="form-error" role="status"></p>
+        <button class="secondary-button" type="button" data-close-modal>Close</button>
+    </section>
+</div>
+</body>
+</html>
